@@ -1,7 +1,10 @@
 package com.example.demo.UserAccount.Service;
 
 import com.example.demo.UserAccount.API.UserAccountAPI;
+import com.example.demo.UserAccount.Exception.InfoServerException;
 import com.example.demo.UserAccount.Exception.LoginException;
+import com.example.demo.UserAccount.Exception.NoConnectionException;
+import com.example.demo.UserAccount.Exception.NoSignUpException;
 import com.example.demo.UserAccount.Repository.UserAccountRepository;
 import com.example.demo.UserAccount.domain.UserAccount;
 import com.example.demo.UserAccount.vo.ResponseUserInfo;
@@ -28,16 +31,24 @@ public class UserAccountService {
 
 	@Transactional
 	public void register(String userId, String userPassword, String name, String email) {
-		ResponseUserInfo userInfoDto = userAccountAPI.requestSignUp(userId, name, email);
+		try {
+			ResponseUserInfo userInfoDto = userAccountAPI.requestSignUp(userId, name, email);
 
-		ModelMapper mapper = new ModelMapper();
-		mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-		UserInfo userInfo = mapper.map(userInfoDto, UserInfo.class);
 
-		UserAccount userAccount = UserAccount.createUserAccount(userId, userPassword, userInfo);
-		userAccountRepository.save(userAccount);
+			ModelMapper mapper = new ModelMapper();
+			mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+			UserInfo userInfo = mapper.map(userInfoDto, UserInfo.class);
+			UserAccount userAccount = UserAccount.createUserAccount(userId, userPassword, userInfo);
+			userAccountRepository.save(userAccount);
+		} catch (NoConnectionException | InfoServerException e){
+			throw new NoSignUpException("member 서버 연결 실패");
+			//Transaction RollBack
+		} catch (Exception e){
+			userAccountAPI.deleteUserInfo(userId);
+			throw new NoSignUpException("회원가입 실패");
+			//Transaction RollBack
+		}
 	}
-
 
 	@Transactional
 	public UserAccount login(UserAccountDto dto) {

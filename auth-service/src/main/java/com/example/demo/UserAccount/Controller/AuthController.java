@@ -1,6 +1,9 @@
 package com.example.demo.UserAccount.Controller;
 
+import com.example.demo.UserAccount.API.UserAccountAPI;
 import com.example.demo.UserAccount.Exception.LoginException;
+import com.example.demo.UserAccount.Exception.NoConnectionException;
+import com.example.demo.UserAccount.Exception.NoSignUpException;
 import com.example.demo.UserAccount.LoginAnnotation.Login;
 import com.example.demo.UserAccount.Repository.UserAccountRepository;
 import com.example.demo.UserAccount.Service.UserAccountService;
@@ -41,6 +44,7 @@ public class AuthController {
 
 	private final UserAccountService userAccountService;
 	private final UserAccountRepository userAccountRepository;
+	private final UserAccountAPI userAccountAPI;
 
 
 
@@ -127,10 +131,20 @@ public class AuthController {
 		return "/";
 	}
 
+
+
 	@ExceptionHandler
+	@ResponseBody
 	public ResponseEntity loginExceptionHandler(LoginException e) {
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 	}
+
+	@ExceptionHandler
+	public String noSignUpExceptionHandler(NoSignUpException e){
+		userAccountAPI.deleteUserInfo("emrhssla");
+		return "/";
+	}
+
 
 
 

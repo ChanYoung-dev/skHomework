@@ -1,6 +1,6 @@
 package com.example.demo.UserAccount.Exception;
 
-public class NoUserException extends RuntimeException {
+public class NoUserException extends InfoServerException {
     public NoUserException(String message) {
         super(message);
     }

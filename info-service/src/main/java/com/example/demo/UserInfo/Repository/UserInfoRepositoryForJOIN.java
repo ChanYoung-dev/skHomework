@@ -1,6 +1,7 @@
 package com.example.demo.UserInfo.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import com.example.demo.UserInfo.domain.UserInfo;
 import org.springframework.context.annotation.Primary;
@@ -33,6 +34,14 @@ public class UserInfoRepositoryForJOIN implements UserInfoRepository{
 	public Boolean existsById(String userId) {
 		String qlString = "select case when (count(i) > 0) then true else false end from UserInfo i where i.userId = :userId";
 		return em.createQuery(qlString, Boolean.class).setParameter("userId", userId).getSingleResult();
+	}
+
+	@Transactional
+	public int delete(String userId) {
+		String jpql = "delete from UserInfo u where u.userId = :userId";
+		Query query = em.createQuery(jpql).setParameter("userId",userId);
+		int rows =query.executeUpdate();
+		return rows;
 	}
 
 

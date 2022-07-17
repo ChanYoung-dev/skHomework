@@ -18,7 +18,7 @@ public class TestDataInit {
     @EventListener(ApplicationReadyEvent.class)
     public void initData() {
         log.info("test data init");
-        userAccountService.register("emrhssla", "em89138913", "Kim Chan Yeong", "emrhssla@gmail.com");
+        //userAccountService.register("emrhssla", "em89138913", "Kim Chan Yeong", "emrhssla@gmail.com");
     }
 
 }

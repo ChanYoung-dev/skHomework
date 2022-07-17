@@ -61,4 +61,11 @@ public class MemberController {
         return ResponseEntity.status(HttpStatus.OK).body(new ModelMapper().map(userInfo, ResponseInfoSignUp.class));
     }
 
+    @PostMapping("/delete/{userId}")
+    @ResponseBody
+    public ResponseEntity<ResponseInfoSignUp> deleteUserInfo(@PathVariable String userId){
+        userInfoRepository.delete(userId);
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
+
 }

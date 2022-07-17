@@ -1,8 +1,10 @@
 package com.example.demo.UserInfo.Repository;
 
 import com.example.demo.UserInfo.domain.UserInfo;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 
 public interface UserInfoRepository {
@@ -15,4 +17,7 @@ public interface UserInfoRepository {
     public Boolean existsByEmail(String email);
 
     public Boolean existsById(String userId);
+
+    @Transactional
+    public int delete(String id);
 }
