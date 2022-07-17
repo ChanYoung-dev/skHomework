@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en" class="h-100">
+<head th:replace="fragments/header :: header" />
+<body class="d-flex h-100 text-center text-white bg-dark">
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+<div th:replace="fragments/bodyHeader :: bodyHeader" />
+
+  <main class="px-3 text-start">
+    <h1 id="1-db">1. DB</h1>
+    <ul>
+      <li>간단한 프로젝트이므로 <code>h2 DataBase</code>를 사용
+        <img src="https://user-images.githubusercontent.com/46098949/179397320-0bc259ec-586a-4774-aabe-86c57de4aefe.png" alt="image"></li>
+    </ul>
+    <h1 id="2-">2. 기술 스택</h1>
+    <h2 id="java11">Java11</h2>
+    <ul>
+      <li>Lambda나 정적메소드를 위해 Java8이상을 선택</li>
+    </ul>
+    <h2 id="jpa">JPA</h2>
+    <ul>
+      <li>복잡한 쿼리가 없을때 간편한 JPA 사용</li>
+    </ul>
+    <h2 id="msa">MSA</h2>
+    <ul>
+      <li>도메인을 인증(<code>/Auth/**</code>)과 회원(<code>/Member/**</code>)로 나누어 개발</li>
+      <li><code>Spring Eureka</code> 사용</li>
+      <li><code>Join</code> 과제를 위해 DB는 하나로 통일</li>
+      <li><code>Webclient</code>를 사용하여 API 통신, 하지만 동기방식으로 통신</li>
+    </ul>
+  </main>
+
+
+  <footer class="mt-auto text-white-50">
+    <p>Cover template for <a href="https://getbootstrap.com/" class="text-white">Bootstrap</a>, by <a href="https://twitter.com/mdo" class="text-white">@mdo</a>.</p>
+  </footer>
+</div>
+
+
+    
+  </body>
+</html>

@@ -1,9 +1,13 @@
 package com.example.demo.UserAccount.API;
 
 import com.example.demo.UserAccount.Exception.*;
+import com.example.demo.UserAccount.dto.UserInfoDto;
 import com.example.demo.UserAccount.vo.RequestUserInfo;
 import com.example.demo.UserAccount.vo.ResponseUserInfo;
+import com.example.demo.etc.UserInfo;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -34,16 +38,14 @@ public class UserAccountAPI {
                 .timeout(Duration.ofSeconds(5))
                 .onErrorMap(ExceptionControl::ConnectionError, ex -> new NoUserException("연결시간초과", ex))
                 .block();
-        System.out.println("result.getName() = " + result.getUserName());
 
         return result.getUserName();
     }
 
     @Transactional
-    public ResponseUserInfo requestSignUp(String userId, String userName, String email) {
+    public UserInfoDto requestSignUp(String userId, String userName, String email) {
 
         RequestUserInfo dto = new RequestUserInfo(userId, userName, email);
-
 
         WebClient webClient = WebClient.builder().baseUrl(serverMemberAPI).build();
 
@@ -58,7 +60,10 @@ public class UserAccountAPI {
                 .onErrorMap(ExceptionControl::ConnectionError, ex -> new NoConnectionException("연결시간초과", ex))
                 .block();
 
-        return result;
+        ModelMapper mapper = new ModelMapper();
+        mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
+
+        return mapper.map(result, UserInfoDto.class);
     }
 
     @Transactional

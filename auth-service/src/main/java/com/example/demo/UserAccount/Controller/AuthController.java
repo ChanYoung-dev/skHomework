@@ -2,7 +2,6 @@ package com.example.demo.UserAccount.Controller;
 
 import com.example.demo.UserAccount.API.UserAccountAPI;
 import com.example.demo.UserAccount.Exception.LoginException;
-import com.example.demo.UserAccount.Exception.NoConnectionException;
 import com.example.demo.UserAccount.Exception.NoSignUpException;
 import com.example.demo.UserAccount.LoginAnnotation.Login;
 import com.example.demo.UserAccount.Repository.UserAccountRepository;
@@ -21,8 +20,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-
-//import login.domain.UserAccount;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,9 +53,11 @@ public class AuthController {
 
 	@GetMapping("/login")
 	public String loginForm(@Login UserAccount userAccount, Model model, @RequestParam(required = false) String redirectURL) {
+		// 회원은 로그인페이지에 있을 필요가 없으므로 홈으로 보낸다
 		if(userAccount != null){
 			return "redirect:/";
 		}
+		// 비회원인경우
 		model.addAttribute("serverDomain", serverDomain);
 		model.addAttribute("redirectURL",redirectURL);
 		return "loginForm";
@@ -92,7 +91,7 @@ public class AuthController {
 
 	@PostMapping("/sign-up")
 	public ResponseEntity signUp(@RequestBody RequestSignUp dto){
-		userAccountService.register(dto.getId(), dto.getPassword(), dto.getName(), dto.getEmail());
+		userAccountService.register(new ModelMapper().map(dto, SignUpDto.class));
 		return ResponseEntity.status(HttpStatus.CREATED).build();
 	}
 
@@ -121,17 +120,21 @@ public class AuthController {
 	}
 
 	@GetMapping("/logout")
-	public String logout2(@Login UserAccount loginMember, HttpServletRequest request) {
-		//webclient.post
-		loginMember.setLoginYN("N");
+	public String logoutPage(@Login UserAccount loginMember, HttpServletRequest request) {
+
+		//세션 날려서 비회원 처리
 		HttpSession session = request.getSession(false);
 		if (session != null) {
 			session.invalidate();
 		}
+
 		return "/";
 	}
 
-
+	@GetMapping("/intro")
+	public String intro() {
+		return "intro";
+	}
 
 	@ExceptionHandler
 	@ResponseBody
@@ -144,9 +147,6 @@ public class AuthController {
 		userAccountAPI.deleteUserInfo("emrhssla");
 		return "/";
 	}
-
-
-
 
 
 }

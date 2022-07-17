@@ -37,6 +37,12 @@ public class MemberController {
 
     @GetMapping("/{userId}/my-page")
     public String infoByMSA(@PathVariable String userId, Model model) {
+        /**
+         * 사용자 정보 찾는 방법
+         * 1. 단순하게 UserInfo에서 정보 값 꺼내오기
+         * 2. UserInfo와 UserAccount를 Join을 통하여 정보 꺼내오기
+         * 인터페이스를 통하여 각 구현
+         */
         UserInfo userInfo = userInfoRepository.findUserById(userId);
         model.addAttribute("serverDomain", serverDomain);
         model.addAttribute("memberInfo", new ModelMapper().map(userInfo, UserInfoDto.class));

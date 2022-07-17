@@ -1,12 +1,11 @@
 package com.example.demo.UserAccount.Service;
 
 import com.example.demo.UserAccount.API.UserAccountAPI;
-import com.example.demo.UserAccount.Exception.InfoServerException;
-import com.example.demo.UserAccount.Exception.LoginException;
-import com.example.demo.UserAccount.Exception.NoConnectionException;
-import com.example.demo.UserAccount.Exception.NoSignUpException;
+import com.example.demo.UserAccount.Exception.*;
 import com.example.demo.UserAccount.Repository.UserAccountRepository;
 import com.example.demo.UserAccount.domain.UserAccount;
+import com.example.demo.UserAccount.dto.SignUpDto;
+import com.example.demo.UserAccount.dto.UserInfoDto;
 import com.example.demo.UserAccount.vo.ResponseUserInfo;
 import com.example.demo.UserAccount.dto.UserAccountDto;
 import com.example.demo.etc.UserInfo;
@@ -30,21 +29,20 @@ public class UserAccountService {
 	private final UserAccountAPI userAccountAPI;
 
 	@Transactional
-	public void register(String userId, String userPassword, String name, String email) {
+	public void register(SignUpDto dto) {
 		try {
-			ResponseUserInfo userInfoDto = userAccountAPI.requestSignUp(userId, name, email);
 
+			// Member 서버가 DB에 UserInfo Entity를 Insert
+			UserInfoDto userInfoDto = userAccountAPI.requestSignUp(dto.getId(), dto.getName(), dto.getEmail());
 
-			ModelMapper mapper = new ModelMapper();
-			mapper.getConfiguration().setMatchingStrategy(MatchingStrategies.STRICT);
-			UserInfo userInfo = mapper.map(userInfoDto, UserInfo.class);
-			UserAccount userAccount = UserAccount.createUserAccount(userId, userPassword, userInfo);
+			// UserAccount를 Insert
+			UserAccount userAccount = UserAccount.createUserAccount(dto.getId(), dto.getPassword(), new ModelMapper().map(userInfoDto, UserInfo.class));
 			userAccountRepository.save(userAccount);
 		} catch (NoConnectionException | InfoServerException e){
 			throw new NoSignUpException("member 서버 연결 실패");
 			//Transaction RollBack
 		} catch (Exception e){
-			userAccountAPI.deleteUserInfo(userId);
+			userAccountAPI.deleteUserInfo(dto.getId());
 			throw new NoSignUpException("회원가입 실패");
 			//Transaction RollBack
 		}
@@ -72,13 +70,13 @@ public class UserAccountService {
 	public void controlLoginYN(UserAccount userAccount){
 		userAccount.updateLoginYN("N");
 		userAccountRepository.save(userAccount);
-		System.out.println("Logyn = " + userAccount.getLoginYN());
 	}
 
 	@Transactional
 	public boolean isIdDuplicated(String id) {
 		String regExpression = "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*$";
 
+		//정규식 검사
 		if (!Pattern.matches(regExpression, id)) {
 			throw new RuntimeException("아이디가 올바르지 않습니다.");
 		}

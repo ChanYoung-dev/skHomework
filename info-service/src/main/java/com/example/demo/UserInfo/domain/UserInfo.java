@@ -13,11 +13,11 @@ import lombok.Setter;
 public class UserInfo {
 
 	@Id
-	@Column(name = "user_id")
+	@Column(name = "user_id", length = 10, nullable = false, unique = true)
 	private String userId;
-	
+	@Column(length = 10, nullable = false)
 	private String userName;
-	
+	@Column(length = 100, nullable = false)
 	private String email;
 
 	@OneToOne(mappedBy = "userInfo", fetch = FetchType.LAZY)

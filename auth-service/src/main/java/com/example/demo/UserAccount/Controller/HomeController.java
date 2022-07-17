@@ -13,15 +13,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
     private final UserAccountAPI userAccountAPI;
 
+    /**
+     * ArgumentResolver(@Login)을 이용하여 로그인 판단
+     */
     @GetMapping("/")
     public String home(@Login UserAccount loginMember, Model
             model) {
-        //세션에 회원 데이터가 없으면 home
+        //******비회원*********//
         if (loginMember == null) {
             return "home-guest";
         }
 
-        //이름찾기
+        //********회원**********//
+        // Member 서버에게 회원이름 요청
         String userName = userAccountAPI.requestName(loginMember.getUserId());
         model.addAttribute("memberId", loginMember.getUserId());
         model.addAttribute("memberName", userName);

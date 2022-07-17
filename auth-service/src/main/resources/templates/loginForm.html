@@ -43,12 +43,10 @@
     if([[${redirectURL}]] != null){
       serverDomain += [[${redirectURL}]];
     }
-    console.log(serverDomain)
     /*]]>*/
     $('#unableLogin').hide();
-    $('#logout').hide();
     function login() {
-        let LoginRequestDto = JSON.stringify({
+        let RequestUserAccount = JSON.stringify({
             userId: $('#id').val(),
             userPassword: $('#password').val()
         });
@@ -58,10 +56,12 @@
             type: 'post',
             dataType: 'json',
             contentType: 'application/json',
-            data: LoginRequestDto,
+            data: RequestUserAccount,
             statusCode: {
                 200: function () {
                     $('#unableLogin').hide();
+
+                    //비회원이 기존 사용하려는 서비스 페이지(/member/*)로 redirect
                     location.replace(serverDomain);
                 },
                 400: function () {

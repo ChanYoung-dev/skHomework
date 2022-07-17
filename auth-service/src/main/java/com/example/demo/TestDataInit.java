@@ -1,6 +1,7 @@
 package com.example.demo;
 
 import com.example.demo.UserAccount.Service.UserAccountService;
+import com.example.demo.UserAccount.dto.SignUpDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -18,7 +19,8 @@ public class TestDataInit {
     @EventListener(ApplicationReadyEvent.class)
     public void initData() {
         log.info("test data init");
-        //userAccountService.register("emrhssla", "em89138913", "Kim Chan Yeong", "emrhssla@gmail.com");
+        SignUpDto dto = new SignUpDto("emrhssla", "emrhssla@gmail.com", "김찬영", "em89138913");
+        userAccountService.register(dto);
     }
 
 }
