@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ko" class="h-100">
+<head th:replace="fragments/header :: header" />
+<body class="d-flex h-100 text-center text-white bg-dark" onbeforeunload="closePage()">
+<div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <div th:replace="fragments/bodyHeader :: bodyHeader" />
+
+    <main class="px-3">
+        <h1 id="h1">회원 정보</h1>
+        <p class="lead" th:text="${memberInfo.name}+' 님'"></p>
+        <h2 class="lead" th:text="'이메일: ' + ${memberInfo.email}"></h2>
+        <p class="lead">
+            <a href="#" onclick="requestLogout()" class="btn btn-lg btn-secondary fw-bold border-white bg-white">Logout</a>
+        </p>
+    </main>
+
+    <footer class="mt-auto text-white-50">
+        <p>Cover template for <a onclick="closePage()" class="text-white">Bootstrap</a>, by <a href="https://twitter.com/mdo" class="text-white">@mdo</a>.</p>
+    </footer>
+</div>
+
+
+</body>
+</html>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script type="text/javascript" th:inline="javascript">
+    console.log(serverDomain)
+    function requestLogout() {
+        $.ajax({
+            type: "POST",
+            url: '/auth/logout',
+            statusCode: {
+                200: function () {
+                    location.replace([[${serverDomain}]]);
+                },
+                500: function () {
+                    alert("잠시 후 다시 시도해주세요.");
+                }
+            }
+        })
+    }
+
+</script>
