@@ -17,7 +17,7 @@ public class UserAccount {
 	private Long id;
 
 	@Column(nullable = false)
-	private String userId; // 사용자 식별자
+	private String userId; // 사용자 아이디
 	
 	private String userPassword;
 

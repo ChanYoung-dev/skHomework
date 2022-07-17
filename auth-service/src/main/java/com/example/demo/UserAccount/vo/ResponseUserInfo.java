@@ -1,8 +1,10 @@
 package com.example.demo.UserAccount.vo;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class ResponseUserInfo {
 
     String userId;
@@ -15,6 +17,4 @@ public class ResponseUserInfo {
         this.email = email;
     }
 
-    public ResponseUserInfo() {
-    }
 }
