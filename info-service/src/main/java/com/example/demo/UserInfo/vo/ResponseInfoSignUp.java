@@ -1,16 +1,14 @@
-package com.example.demo.UserInfo.dto;
+package com.example.demo.UserInfo.vo;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequestInfoSignUp {
-
+public class ResponseInfoSignUp {
     String userId;
     String userName;
     String email;
-    
 }
